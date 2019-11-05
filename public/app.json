@@ -1,11 +1,22 @@
 {
     "startup_app": {
-        "name": "Weather Scraping Dashboard",
-        "description": "Demonstrate scraping data from child windows",
+        "name": "Ops Visual Dashboard",
         "url": "http://localhost:5555/index.html",
-        "uuid": "simple-dashboard",
-        "autoShow": true
+        "uuid": "OVD",
+        "applicationIcon": "http://localhost:5555/favicon.ico",
+        "autoShow": true,
+        "Plugins": true,
+        "saveWindowState": true
     },
+    "services": [{
+        "name": "layouts",
+        "config": {
+          "features": {
+            "snap": true,
+            "dock": true,
+            "tab": true}
+          }
+    }],
     "runtime": {
         "arguments": "",
         "version": "stable"
