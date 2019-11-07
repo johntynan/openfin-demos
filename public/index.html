@@ -9,145 +9,165 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="css/main.css">
   <script>
-    const refreshIntervals = {};
-    var windowsOpen = false;
-    infobox = null;
+  const refreshIntervals = {};
+  var windowsOpen = false;
+  infobox = null;
+  var selectedValue = null;
+  var selectedLatLon = null;
 
-    function addOrUpdateLocation() {
-      let locationSelector = document.querySelector('#Posts');
-      let selectedLocation = locationSelector.options[locationSelector.selectedIndex];
-      let selectedText = selectedLocation.innerText;
-      let selectedValue = selectedLocation.value;
-      let selectedLatLon = selectedLocation.dataset.location;
-      console.log(selectedLatLon);
+function setPostInfo(){
+    let locationSelector = document.querySelector('#Posts');
+    console.log(locationSelector);
+    let selectedLocation = locationSelector.options[locationSelector.selectedIndex];
+    console.log(selectedLocation);
+    let selectedText = selectedLocation.innerText;
+    console.log(selectedText);
+    selectedValue = selectedLocation.value;
+    console.log(selectedValue);
+    let selectedLatLon = selectedLocation.dataset.location;
+    console.log(selectedLatLon);
 
-      let refreshSelector = document.querySelector('#refreshSelector');
-      let selectedRefresh = refreshSelector.options[refreshSelector.selectedIndex];
-      let refreshIntervalms = selectedRefresh.value;
-
-      let locationWindow = fin.Window.wrapSync({
-        uuid: fin.Application.getCurrentSync().identity.uuid,
-        name: selectedValue
+    /*
+    if (!refreshIntervals[selectedValue]) {
+      // This location is not currently being monitored, open a window
+      locationWindow.on('initialized', () => {
+        scrapeData(selectedValue, selectedText);
       });
 
-      if (!refreshIntervals[selectedValue]) {
-        // This location is not currently being monitored, open a window
-        locationWindow.on('initialized', () => {
-          scrapeData(selectedValue, selectedText);
-        });
+      locationWindow.on('closed', () => {
+        clearInterval(refreshIntervals[selectedValue]);
+        deleteRow(selectedValue);
+      });
+    }
+    */
+  }
 
-        locationWindow.on('closed', () => {
-          clearInterval(refreshIntervals[selectedValue]);
-          deleteRow(selectedValue);
-        });
+  function addOrUpdateLocation() {
 
-        if (!windowsOpen){
+    let refreshSelector = document.querySelector('#refreshSelector');
+    let selectedRefresh = refreshSelector.options[refreshSelector.selectedIndex];
+    let refreshIntervalms = selectedRefresh.value;
 
-          fin.Window.create({
-            // name: selectedValue,
-            name: 'wiki',
-            uuid: 'OVD',
-            url: 'https://en.wikipedia.org/wiki/' + selectedValue,
-            autoShow: true
-          });
-          fin.Window.create({
-            name: 'map',
-            uuid: 'OVD',
-            url: 'https://www.google.com/maps?ll=' + selectedLatLon + '&z=10',
-            autoShow: true
-          });
-        /*
-          fin.Window.create({
-            name: 'Map_' + selectedValue,
-            uuid: 'OVD',
-            url: 'https://www.google.com/maps?ll=' + selectedLatLon + '&z=10',
-            autoShow: true
-          });
-        */
-          // upsertRow(selectedValue, selectedText);
+    let locationWindow = fin.Window.wrapSync({
+      uuid: fin.Application.getCurrentSync().identity.uuid,
+      name: selectedValue
+    });
 
-        }else{ //update windows with new values
-          console.log("updating existing windows");
-          updateMapWindow(selectedLatLon)
-          .then(updateWikiWindow(selectedValue))
-          .then(() => console.log('options is updated')).catch(err => console.error(err));
+    if (!windowsOpen){
+
+      fin.Window.create({
+        // name: selectedValue,
+        name: 'wiki',
+        uuid: 'OVD',
+        url: 'https://en.wikipedia.org/wiki/' + selectedValue,
+        autoShow: true
+      });
+      fin.Window.create({
+        name: 'map',
+        uuid: 'OVD',
+        url: 'https://www.google.com/maps?ll=' + selectedLatLon + '&z=10',
+        autoShow: true
+      });
+
+      windowsOpen = true;
+      /*
+      fin.Window.create({
+        name: 'Map_' + selectedValue,
+        uuid: 'OVD',
+        url: 'https://www.google.com/maps?ll=' + selectedLatLon + '&z=10',
+        autoShow: true
+      });
+      */
+      // upsertRow(selectedValue, selectedText);
+
+      }else{ //update windows with new values
+      console.log("updating existing windows");
+      updateMapWindow(selectedLatLon)
+      .then(updateWikiWindow(selectedValue))
+      .then(() => console.log('options is updated')).catch(err => console.error(err));
+
+            
+      }
+
+      /*
+      else {
+      // If we are currently monitoring it, cancel the current interval
+      clearInterval(refreshIntervals[selectedValue]);
+      }
+
+      // Now we can reload the page on the specified refresh interval
+      refreshIntervals[selectedValue] = setInterval(() => {
+      locationWindow.reload();
+      }, refreshIntervalms);
+
+      */
+
+
+
+
       
+      }
 
+      // }
 
-
-        
-        }
-
-        /*
-        else {
-          // If we are currently monitoring it, cancel the current interval
-          clearInterval(refreshIntervals[selectedValue]);
-        }
-
-        // Now we can reload the page on the specified refresh interval
-        refreshIntervals[selectedValue] = setInterval(() => {
-          locationWindow.reload();
-        }, refreshIntervalms);
-
-        */
-
-        windowsOpen = true;
-        }
 
       async function updateMapWindow(selectedLatLon) {
-        const win = await fin.Window.wrap({ uuid: 'OVD', name: 'map' });
-        return await win.navigate('https://www.google.com/maps?ll=' + selectedLatLon + '&z=10');
+      const win = await fin.Window.wrap({ uuid: 'OVD', name: 'map' });
+      return await win.navigate('https://www.google.com/maps?ll=' + selectedLatLon + '&z=10');
       }
 
       async function updateWikiWindow(selectedValue) {
-        const win = await fin.Window.wrap({ uuid: 'OVD', name: 'wiki' });
-        return await win.navigate('https://en.wikipedia.org/wiki/' + selectedValue);
+      const win = await fin.Window.wrap({ uuid: 'OVD', name: 'wiki' });
+      return await win.navigate('https://en.wikipedia.org/wiki/' + selectedValue);
       }
 
+
+
+  function upsertRow(id, city, temp, high, low, info) {
+    console.log(city);
+    console.log(info);
+    let row = document.getElementById(id);
+
+    if (row === null) {
+      let weatherTableBody = document.querySelector('#weatherTableBody');
+      let rowTemplate = document.querySelector('#rowTemplate');
+
+      let rowFragment = document.importNode(rowTemplate.content, true);
+      rowFragment.querySelector('tr').id = id;
+      weatherTableBody.appendChild(rowFragment);
+
+      row = document.getElementById(id);
     }
 
-    function upsertRow(id, city, temp, high, low, info) {
-      console.log(city);
-      console.log(info);
-      let row = document.getElementById(id);
+    let values = row.querySelectorAll('td');
 
-      if (row === null) {
-        let weatherTableBody = document.querySelector('#weatherTableBody');
-        let rowTemplate = document.querySelector('#rowTemplate');
+    values[0].textContent = city;
+    values[1].textContent = info;
+  }
 
-        let rowFragment = document.importNode(rowTemplate.content, true);
-        rowFragment.querySelector('tr').id = id;
-        weatherTableBody.appendChild(rowFragment);
+  function deleteRow(id) {
+    let row = document.getElementById(id);
+    row.parentNode.removeChild(row);
+  }
 
-        row = document.getElementById(id);
-      }
+  async function scrapeData(windowName, city) {
+    let targetWindow = fin.desktop.Window.wrap(fin.desktop.Application.getCurrent().uuid, windowName);
+    console.log(targetWindow);
+    // "document.querySelector('#mw-content-text > div > table.infobox.geography.vcard').innerText",
+    // "document.querySelector('body').innerText",
 
-      let values = row.querySelectorAll('td');
-
-      values[0].textContent = city;
-      values[1].textContent = info;
-    }
-
-    function deleteRow(id) {
-      let row = document.getElementById(id);
-      row.parentNode.removeChild(row);
-    }
-
-    async function scrapeData(windowName, city) {
-      let targetWindow = fin.desktop.Window.wrap(fin.desktop.Application.getCurrent().uuid, windowName);
-      console.log(targetWindow);
-      // "document.querySelector('#mw-content-text > div > table.infobox.geography.vcard').innerText",
-      // "document.querySelector('body').innerText",
-
-      let infoBox = await new Promise((resolve,reject) => {
-        targetWindow.executeJavaScript(
-          "document.querySelector('#mw-content-text > div > table.infobox.geography.vcard').innerText",
+    let infoBox = 'test';
+    /*
+    let infoBox = await new Promise((resolve,reject) => {
+      targetWindow.executeJavaScript(
+        "document.querySelector('#mw-content-text > div > table.infobox.geography.vcard').innerText",
       resolve,
       reject
-    )
-  });
-
-  upsertRow(windowName, city, currentTemp, highTemp, lowTemp, infoBox);
+      )
+    });
+    */
+  upsertRow(windowName, city, infoBox);
+    
   }
   </script>
 </head>
@@ -164,7 +184,7 @@
     </div>
     <div style="margin-bottom: 20px">
       <label for="Posts">Select Post</label>
-        <select id="Posts">
+        <select id="Posts" onChange="setPostInfo(this)">
         <option value="Abidjan, Cote D'ivoire" data-location="5.3599517, -4.0082563">Abidjan, Cote D'ivoire</option>
         <option value="Abu Dhabi, United Arab Emirates" data-location="24.4538840, 54.3773438">Abu Dhabi, United Arab
           Emirates</option>
