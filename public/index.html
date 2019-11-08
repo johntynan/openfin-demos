@@ -9,24 +9,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="css/main.css">
   <script>
+
   const refreshIntervals = {};
   var windowsOpen = false;
-  infobox = null;
+  var infobox = null;
   var selectedValue = null;
   var selectedLatLon = null;
 
-function setPostInfo(){
-    let locationSelector = document.querySelector('#Posts');
-    console.log(locationSelector);
-    let selectedLocation = locationSelector.options[locationSelector.selectedIndex];
-    console.log(selectedLocation);
-    let selectedText = selectedLocation.innerText;
-    console.log(selectedText);
+  // begin single window opening section
+
+  /* Define a function that will launch multiple windows */
+  async function launchWindow() {
+    url = document.getElementById('NewWindow').value
+    document.getElementById('NextWindowName').stepUp(1);
+    windowName = document.getElementById('NextWindowName').value
+    /* Use the await keyword. The function will wait for the 
+    window object to instantiate before resuming execution */
+    const win = await fin.Window.create({
+      /* Provide initialization options to the new window */
+      name: windowName,
+      url: url,
+      defaultWidth: 600,
+      defaultHeight: 400,
+      resizable: true,
+      autoShow: true
+    });
+    /* When the window object is finished building, this method will 
+    cause the Chromium Developer showDeveloperTools to be displayed */
+    // await win.showDeveloperTools();
+  }
+
+  // end single window opening section
+
+  // begin post selection section
+
+  function setPostInfo(){
+    locationSelector = document.querySelector('#Posts');
+    // console.log(locationSelector);
+    selectedLocation = locationSelector.options[locationSelector.selectedIndex];
+    // console.log(selectedLocation);
+    selectedText = selectedLocation.innerText;
+    // console.log(selectedText);
     selectedValue = selectedLocation.value;
     console.log(selectedValue);
-    let selectedLatLon = selectedLocation.dataset.location;
+    selectedLatLon = selectedLocation.dataset.location;
     console.log(selectedLatLon);
 
+    // will the following commented code be useful?
     /*
     if (!refreshIntervals[selectedValue]) {
       // This location is not currently being monitored, open a window
@@ -42,6 +71,10 @@ function setPostInfo(){
     */
   }
 
+  // end post selection section
+
+  // begin refresh section
+
   function addOrUpdateLocation() {
 
     let refreshSelector = document.querySelector('#refreshSelector');
@@ -53,7 +86,8 @@ function setPostInfo(){
       name: selectedValue
     });
 
-    if (!windowsOpen){
+    if (!windowsOpen == true){
+      console.log('windowsOpen is ' + windowsOpen);
 
       fin.Window.create({
         // name: selectedValue,
@@ -78,16 +112,19 @@ function setPostInfo(){
         autoShow: true
       });
       */
-      // upsertRow(selectedValue, selectedText);
+      upsertRow(selectedValue, selectedText);
 
       }else{ //update windows with new values
-      console.log("updating existing windows");
-      updateMapWindow(selectedLatLon)
-      .then(updateWikiWindow(selectedValue))
-      .then(() => console.log('options is updated')).catch(err => console.error(err));
-
-            
+        console.log('windowsOpen is ' + windowsOpen);
+        console.log("updating existing windows");
+        // updateMapWindow(selectedLatLon)
+        //.then(updateWikiWindow(selectedLatLon)
+        updateMapWindow()
+        .then(updateWikiWindow())
+        .then(() => console.log('options is updated')).catch(err => console.error(err));
       }
+
+      // will the following commented code be useful?
 
       /*
       else {
@@ -102,80 +139,86 @@ function setPostInfo(){
 
       */
 
-
-
-
-      
-      }
-
-      // }
-
-
-      async function updateMapWindow(selectedLatLon) {
-      const win = await fin.Window.wrap({ uuid: 'OVD', name: 'map' });
-      return await win.navigate('https://www.google.com/maps?ll=' + selectedLatLon + '&z=10');
-      }
-
-      async function updateWikiWindow(selectedValue) {
-      const win = await fin.Window.wrap({ uuid: 'OVD', name: 'wiki' });
-      return await win.navigate('https://en.wikipedia.org/wiki/' + selectedValue);
-      }
-
-
-
-  function upsertRow(id, city, temp, high, low, info) {
-    console.log(city);
-    console.log(info);
-    let row = document.getElementById(id);
-
-    if (row === null) {
-      let weatherTableBody = document.querySelector('#weatherTableBody');
-      let rowTemplate = document.querySelector('#rowTemplate');
-
-      let rowFragment = document.importNode(rowTemplate.content, true);
-      rowFragment.querySelector('tr').id = id;
-      weatherTableBody.appendChild(rowFragment);
-
-      row = document.getElementById(id);
+    windowsOpen = true;
+    console.log('windowsOpen is ' + windowsOpen);
+  
     }
 
-    let values = row.querySelectorAll('td');
-
-    values[0].textContent = city;
-    values[1].textContent = info;
-  }
-
-  function deleteRow(id) {
-    let row = document.getElementById(id);
-    row.parentNode.removeChild(row);
-  }
-
-  async function scrapeData(windowName, city) {
-    let targetWindow = fin.desktop.Window.wrap(fin.desktop.Application.getCurrent().uuid, windowName);
-    console.log(targetWindow);
-    // "document.querySelector('#mw-content-text > div > table.infobox.geography.vcard').innerText",
-    // "document.querySelector('body').innerText",
-
-    let infoBox = 'test';
-    /*
-    let infoBox = await new Promise((resolve,reject) => {
-      targetWindow.executeJavaScript(
-        "document.querySelector('#mw-content-text > div > table.infobox.geography.vcard').innerText",
-      resolve,
-      reject
-      )
-    });
-    */
-  upsertRow(windowName, city, infoBox);
+    // begin scraping section
     
+    // async function updateMapWindow(selectedLatLon) {
+    async function updateMapWindow() {
+      console.log(selectedLatLon);
+      const win = await fin.Window.wrap({ uuid: 'OVD', name: 'map' });
+      return await win.navigate('https://www.google.com/maps?ll=' + selectedLatLon + '&z=10');
+    }
+
+    // async function updateWikiWindow(selectedValue) {
+    async function updateWikiWindow() {
+      console.log(selectedValue);
+      const win = await fin.Window.wrap({ uuid: 'OVD', name: 'wiki' });
+      return await win.navigate('https://en.wikipedia.org/wiki/' + selectedValue);
+    }
+
+    function upsertRow(id, city, info) {
+      console.log(city);
+      console.log(info);
+      let row = document.getElementById(id);
+
+      if (row === null) {
+        let weatherTableBody = document.querySelector('#weatherTableBody');
+        let rowTemplate = document.querySelector('#rowTemplate');
+
+        let rowFragment = document.importNode(rowTemplate.content, true);
+        rowFragment.querySelector('tr').id = id;
+        weatherTableBody.appendChild(rowFragment);
+
+        row = document.getElementById(id);
+      }
+
+      let values = row.querySelectorAll('td');
+
+      values[0].textContent = city;
+      values[1].textContent = info;
+    }
+
+    function deleteRow(id) {
+      let row = document.getElementById(id);
+      row.parentNode.removeChild(row);
+    }
+
+    async function scrapeData(windowName, city) {
+      let targetWindow = fin.desktop.Window.wrap(fin.desktop.Application.getCurrent().uuid, windowName);
+      console.log(targetWindow);
+      // this is the div we're looking for on the wikipedia page
+      // "document.querySelector('#mw-content-text > div > table.infobox.geography.vcard').innerText",
+      // "document.querySelector('body').innerText",
+
+      let infoBox = 'test';
+      // commented out the following code until we are sure we're getting target window all straightend out.
+      /*
+      let infoBox = await new Promise((resolve,reject) => {
+        targetWindow.executeJavaScript(
+          "document.querySelector('#mw-content-text > div > table.infobox.geography.vcard').innerText",
+        resolve,
+        reject
+        )
+      });
+      */
+
+      upsertRow(windowName, city, infoBox);
+    
+    // end scraping section
   }
-  </script>
+  // end refresh section  
+</script>
 </head>
 
 <body>
   <script src="https://cdn.openfin.co/services/openfin/layouts/1.0.5/openfin-layouts.js"></script>
   <script src="js/main.js"></script>
-  <form>
+  <!-- commented out the form to prevent loading the page -->
+  <!-- form -->
     <div style="margin-bottom: 20px">
       <label for="NewWindow">URL:</label>
       <input type="url" id="NewWindow">
@@ -600,7 +643,7 @@ function setPostInfo(){
           <option value="300000">5 min</option>
         </select>
         <br />
-        <button onclick="addOrUpdateLocation()">Scrape Data</button>
+        <button onclick="addOrUpdateLocation()">Open Windows</button>
         </div>
       </section>
     </div>
@@ -613,7 +656,8 @@ function setPostInfo(){
       <button type="button" onclick="recallWindows()">Recall Tiles</button><br />
       <!--button type="button" onclick="clearWorkspaces()">Clear All</button-->
     </div>
-  </form>
+  <!-- commented out the form to prevent loading the page -->
+  <!-- /form -->
   <hr />
   <section>
     <table>
@@ -636,74 +680,58 @@ function setPostInfo(){
       Current version: <span id="of-version"></span>
     </p>
   </div>
+</body>
 <script>
-    function clearWorkspaces() {
-      delete localStorage.workspaces;
+  // for whatever reason, this script needs to go at the end of the page
+  // begin layouts section
+
+  function clearWorkspaces() {
+    delete localStorage.workspaces;
+    updateWorkspaceList();
+  }
+
+  function updateWorkspaceList() {
+    let workspaces = JSON.parse(localStorage.workspaces || '{}');
+
+    let workspacesList = document.getElementById("WorkspacesList");
+    workspacesList.innerHTML = "";
+
+    Object.keys(workspaces).forEach(workspace => {
+      let workspaceOption = document.createElement("option");
+      workspaceOption.innerText = workspace;
+      workspacesList.appendChild(workspaceOption);
+    });
+  }
+
+  async function saveWindows() {
+    let workspaces = JSON.parse(localStorage.workspaces || '{}');
+
+    let workspaceInput = document.getElementById("Workspace");
+    let workspaceName = workspaceInput.value;
+
+    if (workspaceName) {
+      workspaces[workspaceName] = await layouts.workspaces.generate();
+      localStorage.workspaces = JSON.stringify(workspaces);
       updateWorkspaceList();
     }
+  }
 
-    function updateWorkspaceList() {
-      let workspaces = JSON.parse(localStorage.workspaces || '{}');
+  async function recallWindows() {
+    let workspaces = JSON.parse(localStorage.workspaces || '{}');
 
-      let workspacesList = document.getElementById("WorkspacesList");
-      workspacesList.innerHTML = "";
+    let selectedWorkspace = document.getElementById("WorkspacesList");
+    let workspaceName = selectedWorkspace.value;
 
-      Object.keys(workspaces).forEach(workspace => {
-        let workspaceOption = document.createElement("option");
-        workspaceOption.innerText = workspace;
-        workspacesList.appendChild(workspaceOption);
-      });
+    if (workspaceName) {
+      await layouts.workspaces.restore(workspaces[workspaceName]);
     }
+  }
 
-    async function saveWindows() {
-      let workspaces = JSON.parse(localStorage.workspaces || '{}');
+  updateWorkspaceList();
 
-      let workspaceInput = document.getElementById("Workspace");
-      let workspaceName = workspaceInput.value;
+  layouts.workspaces.setRestoreHandler(layouts.restoreHelpers.standardRestoreHandler);
+  layouts.workspaces.ready();
+  // end layouts section
 
-      if (workspaceName) {
-        workspaces[workspaceName] = await layouts.workspaces.generate();
-        localStorage.workspaces = JSON.stringify(workspaces);
-        updateWorkspaceList();
-      }
-    }
-
-    async function recallWindows() {
-      let workspaces = JSON.parse(localStorage.workspaces || '{}');
-
-      let selectedWorkspace = document.getElementById("WorkspacesList");
-      let workspaceName = selectedWorkspace.value;
-
-      if (workspaceName) {
-        await layouts.workspaces.restore(workspaces[workspaceName]);
-      }
-    }
-
-    updateWorkspaceList();
-
-    layouts.workspaces.setRestoreHandler(layouts.restoreHelpers.standardRestoreHandler);
-    layouts.workspaces.ready();
-
-    /* Define a function that will launch multiple windows */
-    async function launchWindow() {
-      url = document.getElementById('NewWindow').value
-      document.getElementById('NextWindowName').stepUp(1);
-      windowName = document.getElementById('NextWindowName').value
-      /* Use the await keyword. The function will wait for the 
-      window object to instantiate before resuming execution */
-      const win = await fin.Window.create({
-        /* Provide initialization options to the new window */
-        name: windowName,
-        url: url,
-        defaultWidth: 600,
-        defaultHeight: 400,
-        resizable: true,
-        autoShow: true
-      });
-      /* When the window object is finished building, this method will 
-      cause the Chromium Developer showDeveloperTools to be displayed */
-      // await win.showDeveloperTools();
-    }
-  </script>
-</body>
+</script>
 </html>
