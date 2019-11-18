@@ -8,18 +8,10 @@
         "Plugins": true,
         "saveWindowState": true
     },
-    "services": [{
-        "name": "layouts",
-        "config": {
-          "features": {
-            "snap": true,
-            "dock": true,
-            "tab": true}
-          }
-    }],
+    "services": [],
     "runtime": {
         "arguments": "",
-        "version": "stable"
+        "version": "14.78.46.14"
     },
     "shortcut": {
     }
