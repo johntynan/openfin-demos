@@ -1,7 +1,7 @@
 {
     "startup_app": {
-        "name": "Ops Visual Dashboard",
-        "url": "http://localhost:5555/index.html",
+        "name": "My Visual Dashboard",
+        "url": "http://localhost:5555/standard_frame.html",
         "uuid": "OVD",
         "applicationIcon": "http://localhost:5555/favicon.ico",
         "autoShow": true,
