@@ -33,25 +33,11 @@ class ViewForm extends HTMLElement {
         const wins = await app.getChildWindows();
 
         this.selectedWindow = wins[0].identity.name;
-        // <label for="PostOptions">Post Options:</label>
-        // <ul id="PostOptions">
-        // <li><input type="checkbox" class="PostOption" value="GoogleMaps" checked>Google Maps</li>
-        // <li><input type="checkbox" class="PostOption" value="Wikipedia" checked>Wikipedia</li>
-        // </ul>
-        // <label for="Posts">Select Post</label>
-        // <!-- switch betwen the two select tags to switch between the two versions of the apps which have yet to be reconciled -->
-        // <!-- select id="Posts" onChange="launchPostWindows(this)" -->
         
-        const postsOptions = ``
     
         const vForm = html`<input type="number" id="NextWindowName" style="visibility: hidden">
         <div>
             <fieldset>
-	            <label for="PostOptions">Post Options:</label>
-	            <ul id="PostOptions">
-	            	<li><input type="checkbox" class="PostOption" value="GoogleMaps" checked>Google Maps</li>
-	            	<li><input type="checkbox" class="PostOption" value="Wikipedia" checked>Wikipedia</li>
-        		</ul>
 				<label for="Posts">Select Post</label>
             	<select id='Posts' onChange='launchPostWindows(this)'>
         		<!-- switch betwen the two select tags to switch between the two versions of the apps which have yet to be reconciled -->
@@ -462,33 +448,36 @@ class ViewForm extends HTMLElement {
             	</select>
                 <legend>Create a new View</legend>
                 <button @click=${this.createView}>Create</button> <br>
+                                <legend>Layout</legend>
+                <select id='layout'>
+	                <option value="grid">Grid</option>
+	                <option value="tabbed">Tabbed</option>
+	                <option value="fixed">Fixed</option>
+				</select>
                 <input
                     type="text"
                     id="url1"
                     .value=${this.url1Default}
                     size="50"
+                    style="visibility:hidden"
                     @input=${this.handleInput}
-                /> <br>
+                /> <!-- br -->
                 <input
                     type="text"
                     id="url2"
                     .value=${this.url2Default}
                     size="50"
+                    style="visibility:hidden"
                     @input=${this.handleInput}
-                /> <br>
+                /> <!-- br -->
                 <input
                     type="text"
                     id="url3"
                     .value=${this.url3Default}
                     size="50"
+                    style="visibility:hidden"
                     @input=${this.handleInput}
                 />
-                <legend>Layout</legend>
-                <select id='layout'>
-                <option value="grid">Grid</option>
-                <option value="tabbed">Tabbed</option>
-                <option value="fixed">Fixed</option>
-            </select>
             </fieldset>
             <fieldset>
                 <legend>Add view to window</legend>
@@ -513,7 +502,16 @@ class ViewForm extends HTMLElement {
              <legend>Layout Generator</legend>
               <button @click=${this.launchGenerator}>Launch Layout Generator</button> <br>
           </fieldset>
-        </div>`;
+        </div>
+            <div style="margin-bottom: 20px">
+      <label for="Workspace">Tile Set Name:</label><br />
+      <input id="Workspace" /><br />
+      <button type="button" onclick="saveWindows()">Save Tiles</button><br /><br />
+      <label for="WorkspaceList">Tile Sets:</label><br />
+      <select id="WorkspacesList"></select><br />
+      <button type="button" onclick="recallWindows()">Recall Tiles</button><br />
+      <!--button type="button" onclick="clearWorkspaces()">Clear All</button-->
+    </div>`;
         render(vForm, this);
         // render(postsOptions, this);
     }
