@@ -1,5 +1,6 @@
 import { html, render } from 'https://unpkg.com/lit-html@1.0.0/lit-html.js';
 
+
 class ViewForm extends HTMLElement {
     constructor() {
         super();
@@ -22,10 +23,10 @@ class ViewForm extends HTMLElement {
     }
 
     async render() {
-        this.url1Default = 'https://test.com';
-        this.url2Default = 'https://cdn.openfin.co/embed-web/chart.html';
-        this.url3Default = 'https://www.tradingview.com/chart/?symbol=NASDAQ:AAPL';
-        this.urlToAdd = 'https://cdn.openfin.co/embed-web/chart.html';
+        this.url1Default = '';
+        this.url2Default = '';
+        this.url3Default = '';
+        this.urlToAdd = '';
 
         //Hard coded code here, caution:
         const app = fin.Application.getCurrentSync();
@@ -43,7 +44,7 @@ class ViewForm extends HTMLElement {
         
         const postsOptions = ``
     
-        const vForm = html`
+        const vForm = html`<input type="number" id="NextWindowName" style="visibility: hidden">
         <div>
             <fieldset>
 	            <label for="PostOptions">Post Options:</label>
@@ -52,7 +53,7 @@ class ViewForm extends HTMLElement {
 	            	<li><input type="checkbox" class="PostOption" value="Wikipedia" checked>Wikipedia</li>
         		</ul>
 				<label for="Posts">Select Post</label>
-            	<select id='Posts'>
+            	<select id='Posts' onChange='launchPostWindows(this)'>
         		<!-- switch betwen the two select tags to switch between the two versions of the apps which have yet to be reconciled -->
         		<!-- select id="Posts" onChange="launchPostWindows(this)" -->
 					<option value="Abidjan, Cote D'ivoire" data-location="5.3599517, -4.0082563">Abidjan, Cote D'ivoire</option>
