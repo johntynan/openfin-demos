@@ -12,37 +12,46 @@
   </head>
   
   <body>
-  <script>
-  async function launchPostWindows(sel) {
+    <script src="/yoursite/SiteAssets/js/jQuery/jquery-3.3.1.min.js" type="text/javascript"></script>
+    <script src="/yoursite/SiteAssets/js/pnp/pnp.js" type="text/javascript"></script>
+    <script src="/yoursite/SiteAssets/js/json2html/json2html.js" type="text/javascript"></script>
+        
+    <!-- script src="/yoursite/SiteAssets/js/jQuery/jquery-3.3.1.min.js" type="text/javascript"></script>
+    <script src="/yoursite/SiteAssets/js/pnp/pnp.js" type="text/javascript"></script>
+    <script src="/yoursite/SiteAssets/js/json2html/json2html.js" type="text/javascript"></script -->
+    
+    <script>  
+    async function launchPostWindows(sel) {
     let locationSelector = document.querySelector('#Posts');
     let selectedLocation = locationSelector.options[locationSelector.selectedIndex];
     let selectedText = selectedLocation.innerText;
     let selectedValue = selectedLocation.value;
     let selectedLatLon = selectedLocation.dataset.location;
-    console.log(selectedLatLon);
+    let selectedPostID = selectedLocation.dataset.postid;
+    console.log(selectedPostID);
     
-    mapURL = 'https://www.google.com/maps?ll=' + sel.options[sel.selectedIndex].dataset.location + '&z=10'
-    console.log(mapURL);
-    url = mapURL,
-    document.getElementById('NextWindowName').stepUp(1);
-    windowName = 'Map - ' + document.getElementById('NextWindowName').text
-    document.getElementById("url1").value = url; 
-    
-    wikiURL = 'https://en.wikipedia.org/wiki/' + sel.options[sel.selectedIndex].text
-    console.log(wikiURL);
-    url = wikiURL,
-    document.getElementById('NextWindowName').stepUp(1);
-    windowName = 'Wikipedia - ' + document.getElementById('NextWindowName').value
-    document.getElementById("url2").value = url; 
-
-    listURL = 'https://yoursubdomain.sharepoint.com/yorusite/Lists/yourlist/AllItems.aspx?FilterField1=LinkTitle&FilterValue1=%20' + sel.options[sel.selectedIndex].text + '&FilterType1=Computed&isDLG=1'
-    console.log(listURL);
-    url = listURL,
-    document.getElementById('NextWindowName').stepUp(1);
-    windowName = 'SharePoint - ' + document.getElementById('NextWindowName').value
-    document.getElementById("url3").value = url;
-
-  };
+      mapURL = 'https://www.google.com/maps?ll=' + sel.options[sel.selectedIndex].dataset.location + '&z=10'
+      console.log(mapURL);
+      url = mapURL,
+      document.getElementById('NextWindowName').stepUp(1);
+      windowName = 'Map - ' + document.getElementById('NextWindowName').text
+      document.getElementById("url1").value = url; 
+      
+      wikiURL = 'https://en.wikipedia.org/wiki/' + sel.options[sel.selectedIndex].text
+      console.log(wikiURL);
+      url = wikiURL,
+      document.getElementById('NextWindowName').stepUp(1);
+      windowName = 'Wikipedia - ' + document.getElementById('NextWindowName').value
+      document.getElementById("url2").value = url; 
+  
+      // listURL = 'https://yoursubdomain.sharepoint.com/yoursite/Lists/Posts/AllItems.aspx?FilterField1=LinkTitle&FilterValue1=%20' + sel.options[sel.selectedIndex].text + '&FilterType1=Computed&isDLG=1'
+      listURL = 'https://yoursubdomain.sharepoint.com/yoursite/SiteAssets/OpenFin/view_posts.aspx?ID=' + selectedPostID
+      console.log(listURL);
+      url = listURL,
+      document.getElementById('NextWindowName').stepUp(1);
+      windowName = 'SharePoint - ' + document.getElementById('NextWindowName').value
+      document.getElementById("url3").value = url;
+      };
   
       async function clearWorkspaces() {
         delete localStorage.workspaces;
