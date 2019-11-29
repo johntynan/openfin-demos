@@ -28,10 +28,20 @@
     windowName = 'Map - ' + document.getElementById('NextWindowName').text
     document.getElementById("url1").value = url; 
     
-    url = 'https://en.wikipedia.org/wiki/' + sel.options[sel.selectedIndex].text
+    wikiURL = 'https://en.wikipedia.org/wiki/' + sel.options[sel.selectedIndex].text
+    console.log(wikiURL);
+    url = wikiURL,
     document.getElementById('NextWindowName').stepUp(1);
     windowName = 'Wikipedia - ' + document.getElementById('NextWindowName').value
     document.getElementById("url2").value = url; 
+
+    listURL = 'https://yoursubdomain.sharepoint.com/yorusite/Lists/yourlist/AllItems.aspx?FilterField1=LinkTitle&FilterValue1=%20' + sel.options[sel.selectedIndex].text + '&FilterType1=Computed&isDLG=1'
+    console.log(listURL);
+    url = listURL,
+    document.getElementById('NextWindowName').stepUp(1);
+    windowName = 'SharePoint - ' + document.getElementById('NextWindowName').value
+    document.getElementById("url3").value = url;
+
   };
   
       async function clearWorkspaces() {

@@ -2,7 +2,7 @@
     "startup_app": {
         "name": "layouts2_prototype_local",
         "uuid": "layouts2_prototype_local",
-        "applicationIcon": "https://yourdomain/sites/SiteAssets/YourFolder/favicon.ico",
+        "applicationIcon": "https://johntynan.sharepoint.com/TSClassicDev/SiteAssets/OpenFin/favicon.ico",
         "autoShow": false,
         "layout": {
             "windows": [
@@ -27,7 +27,7 @@
                                             "name": "component_A1",
                                             "processAffinity": "ps_1",
                                             "showDevTools": true,
-                                            "url": "https://yourdomain/sites/SiteAssets/YourFolder/index.html"
+                                            "url": "https://johntynan.sharepoint.com/TSClassicDev/SiteAssets/OpenFin/view_form.aspx"
                                         }
                                     }
                                 ]
@@ -55,7 +55,7 @@
                                         "componentState": {
                                             "name": "component_B1",
                                             "showDevTools": true,
-                                            "url": "https://yourdomain/sites/SiteAssets/YourFolder/view-container.html"
+                                            "url": ""
                                         }
                                     }
                                 ]
@@ -73,7 +73,7 @@
     "shortcut": {
         "company": "OpenFin",
         "description": "Layouts prototype",
-        "icon": "https://yourdomain/sites/SiteAssets/YourFolder/favicon.ico",
+        "icon": "https://johntynan.sharepoint.com/TSClassicDev/SiteAssets/OpenFin/favicon.ico",
         "name": "Layouts2 prototype"
     }
 }
