@@ -28,7 +28,8 @@
     let selectedValue = selectedLocation.value;
     let selectedLatLon = selectedLocation.dataset.location;
     let selectedPostID = selectedLocation.dataset.postid;
-    console.log(selectedPostID);
+    let selectedPopulationId = selectedLocation.dataset.populationid;
+    // console.log(selectedPopulationId);
     
       mapURL = 'https://www.google.com/maps?ll=' + sel.options[sel.selectedIndex].dataset.location + '&z=10'
       console.log(mapURL);
@@ -45,7 +46,7 @@
       document.getElementById("url2").value = url; 
   
       // listURL = 'https://yoursubdomain.sharepoint.com/yoursite/Lists/Posts/AllItems.aspx?FilterField1=LinkTitle&FilterValue1=%20' + sel.options[sel.selectedIndex].text + '&FilterType1=Computed&isDLG=1'
-      listURL = 'https://yoursubdomain.sharepoint.com/yoursite/SiteAssets/OpenFin/view_posts.aspx?ID=' + selectedPostID
+      listURL = 'https://yoursubdomain.sharepoint.com/yoursite/SiteAssets/OpenFin/view_population.aspx?PopulationId=' + selectedPopulationId
       console.log(listURL);
       url = listURL,
       document.getElementById('NextWindowName').stepUp(1);

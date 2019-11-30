@@ -322,9 +322,10 @@ $.ajax({
         "accept": "application/json;odata=verbose",
     },
     success: function(data){
-      console.log(data);
+      // console.log(data);
         $.each(data.d.results, function(index, item){
-            $('#Posts').append("<option value='"+ item.Title + "' data-location='" + item.LatLong + "' " + "data-PostID='" + item.ID + "' >" + item.Title + "</option>");
+        	console.log(item);
+            $('#Posts').append("<option value='"+ item.Title + "' data-location='" + item.LatLong + "' data-PopulationId='" + item.PopulationId + "' " + "data-PostID='" + item.ID + "' >" + item.Title + "</option>");
         });
 
     },
