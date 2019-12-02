@@ -25,6 +25,7 @@ class ViewForm extends HTMLElement {
         this.url1Default = '';
         this.url2Default = '';
         this.url3Default = '';
+        this.url4Default = '';
         this.urlToAdd = '';
 
         //Hard coded code here, caution:
@@ -44,9 +45,9 @@ class ViewForm extends HTMLElement {
                 <button @click=${this.createView}>Create</button> <br>
                                 <legend>Layout</legend>
                 <select id='layout'>
-	                <option value="grid">Grid</option>
 	                <option value="tabbed">Tabbed</option>
 	                <option value="fixed">Fixed</option>
+	                <option value="grid">Grid</option>
 				</select>
                 <input
                     type="text"
@@ -68,6 +69,14 @@ class ViewForm extends HTMLElement {
                     type="text"
                     id="url3"
                     .value=${this.url3Default}
+                    size="50"
+                    style="visibility:hidden"
+                    @input=${this.handleInput}
+                /> <!-- br -->
+                <input
+                    type="text"
+                    id="url4"
+                    .value=${this.url4Default}
                     size="50"
                     style="visibility:hidden"
                     @input=${this.handleInput}
@@ -186,13 +195,20 @@ class ViewForm extends HTMLElement {
             content: [{
                 type: 'row',
                 content: [{
-                    type: 'stack',
+                    type: 'component',
                     content: [{
                         type: 'component',
                         componentName: 'view',
                         componentState: {
                             name: `component_${Date.now() + Math.floor(Math.random() * 10000)}`,
                             url: this.querySelector('#url1').value
+                        }
+                    }, {
+                        type: 'component',
+                        componentName: 'view',
+                        componentState: {
+                            name: `component_${Date.now() + Math.floor(Math.random() * 10000)}`,
+                            url: this.querySelector('#url2').value
                         }
                     }]
                 }, {
@@ -202,14 +218,14 @@ class ViewForm extends HTMLElement {
                         componentName: 'view',
                         componentState: {
                             name: `component_${Date.now() + Math.floor(Math.random() * 10000)}`,
-                            url: this.querySelector('#url2').value
+                            url: this.querySelector('#url3').value
                         }
                     }, {
                         type: 'component',
                         componentName: 'view',
                         componentState: {
                             name: `component_${Date.now() + Math.floor(Math.random() * 10000)}`,
-                            url: this.querySelector('#url3').value
+                            url: this.querySelector('#url4').value
                         }
                     }]
                 }]
@@ -246,6 +262,14 @@ class ViewForm extends HTMLElement {
 
                         name: `component_${Date.now() + Math.floor(Math.random() * 10000)}`,
                         url: this.querySelector('#url3').value
+                    }
+                }, {
+                    type: 'component',
+                    componentName: 'view',
+                    componentState: {
+
+                        name: `component_${Date.now() + Math.floor(Math.random() * 10000)}`,
+                        url: this.querySelector('#url4').value
                     }
                 }]
             }]
@@ -292,6 +316,13 @@ class ViewForm extends HTMLElement {
                             name: `component_${Date.now() + Math.floor(Math.random() * 10000)}`,
                             url: this.querySelector('#url3').value
                         }
+                    }, {
+                        type: 'component',
+                        componentName: 'view',
+                        componentState: {
+                            name: `component_${Date.now() + Math.floor(Math.random() * 10000)}`,
+                            url: this.querySelector('#url4').value
+                        }
                     }]
                 }]
             }]
@@ -322,10 +353,10 @@ $.ajax({
         "accept": "application/json;odata=verbose",
     },
     success: function(data){
-      // console.log(data);
+      console.log(data);
         $.each(data.d.results, function(index, item){
         	console.log(item);
-            $('#Posts').append("<option value='"+ item.Title + "' data-location='" + item.LatLong + "' data-PopulationId='" + item.PopulationId + "' " + "data-PostID='" + item.ID + "' >" + item.Title + "</option>");
+            $('#Posts').append("<option value='"+ item.Title + "' data-location='" + item.LatLong + "' data-PopulationId='" + item.PopulationId + "' " + "' data-ContactInformationId='" + item.ContactInformationId + "' " + "data-PostID='" + item.ID + "' >" + item.Title + "</option>");
         });
 
     },
@@ -333,3 +364,4 @@ $.ajax({
         alert(JSON.stringify(error));
     }
 });
+

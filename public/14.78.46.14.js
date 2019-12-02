@@ -34,34 +34,6 @@
                             }
                         ]
                     }
-                },
-                {
-                    "name": "window_B",
-                    "defaultWidth": 600,
-                    "defaultHeight": 600,
-                    "defaultLeft": 200,
-                    "defaultTop": 200,
-                    "saveWindowState": false,
-                    "backgroundThrottling": true,
-                    "layoutConfig": {
-                        "content": [
-                            {
-                                "type": "stack",
-                                "id": "no-drop-target",
-                                "content": [
-                                    {
-                                        "type": "component",
-                                        "componentName": "view",
-                                        "componentState": {
-                                            "name": "component_B1",
-                                            "showDevTools": true,
-                                            "url": ""
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    }
                 }
             ]
         }

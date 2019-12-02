@@ -29,7 +29,8 @@
     let selectedLatLon = selectedLocation.dataset.location;
     let selectedPostID = selectedLocation.dataset.postid;
     let selectedPopulationId = selectedLocation.dataset.populationid;
-    // console.log(selectedPopulationId);
+    let selectedContactInformationId = selectedLocation.dataset.contactinformationid;
+    console.log(selectedContactInformationId);
     
       mapURL = 'https://www.google.com/maps?ll=' + sel.options[sel.selectedIndex].dataset.location + '&z=10'
       console.log(mapURL);
@@ -52,7 +53,15 @@
       document.getElementById('NextWindowName').stepUp(1);
       windowName = 'SharePoint - ' + document.getElementById('NextWindowName').value
       document.getElementById("url3").value = url;
+  
+      listURL = 'https://yoursubdomain.sharepoint.com/yoursite/SiteAssets/OpenFin/view_contact_information.aspx?ContactInformationId=' + selectedContactInformationId
+      console.log(listURL);
+      url = listURL,
+      document.getElementById('NextWindowName').stepUp(1);
+      windowName = 'SharePoint - ' + document.getElementById('NextWindowName').value
+      document.getElementById("url4").value = url;
       };
+  
   
       async function clearWorkspaces() {
         delete localStorage.workspaces;
@@ -116,12 +125,13 @@
                   <button>Create</button> <br>
                   <input type="text" id="url1" size="50"> <br>
                   <input type="text" id="url2" size="50"> <br>
-                  <input type="text" id="url3" size="50">
+                  <input type="text" id="url3" size="50"> <br>
+                  <input type="text" id="url4" size="50"> <br>
                   <legend>Layout</legend>
                   <select id="layout">
-                  <option value="grid">Grid</option>
-                  <option value="tabbed">Tabbed</option>
+                  <option value="tabbed">Tabbed</option> 
                   <option value="fixed">Fixed</option>
+                  <option value="grid">Grid</option>
               </select>
               </fieldset>
               <fieldset>
@@ -129,7 +139,7 @@
                   <button>Add</button> <br>
                  <input type="text" id="url-to-add" size="50"> <br>
                   <select id="selected-window">
-                      <!----><option value="window_A"><!---->window_A<!----></option><!----><option value="child-window-1574263408721"><!---->child-window-1574263408721<!----></option><!----><option value="child-window-1574263520625"><!---->child-window-1574263520625<!----></option><!---->
+                      <option value="window_A"></option>
                   </select>
                </fieldset>
             <fieldset>
